@@ -4,7 +4,7 @@ Syntax-on is a library for highlighting source by automating vim
 
 It also has a command line interface and a paste-bin style website http://syntax-on.org
 
-== Usage
+== Gem Usage
 
   require 'syntax-on'
 
@@ -13,3 +13,15 @@ It also has a command line interface and a paste-bin style website http://syntax
 
   # example using a modeline
   puts SyntaxOn.new("class Dog; end\n# vim:set ft=ruby:").to_html
+
+== Command Line Usage
+
+  $ syntax-on highlight my-ruby-file.rb
+
+  $ syntax-on highlight --syntax ruby --code "some code to highlight as ruby"
+
+  $ syntax-on highlight --code -s ruby < some-ruby-file-from-STDIN
+
+  $ syntax-on highlight --preview will-preview-in-firefox.rb
+
+  $ syntax-on help highlight  # for more help information

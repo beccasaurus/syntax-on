@@ -23,10 +23,10 @@ class SyntaxOn
     @syntax = options[:syntax]
   end
 
-  def to_html options = { :theme => nil, :line_numbers => true }
+  def to_html options = { :line_numbers => true }
     setup_temp_dir
     create_temp_file
-    setup_vim_options
+    setup_vim_options options
     render
     @html = File.read(@html_file).match(/<pre>(.*)<\/pre>/m)[1].strip
   end
@@ -43,9 +43,10 @@ class SyntaxOn
     File.open(@filename, 'w'){|f| f << @code }
   end
 
-  def setup_vim_options
+  def setup_vim_options options = {}
     @options = VIM_OPTIONS.clone
     @options << "setfiletype #{ @syntax.to_s }" if @syntax
+    @options << 'set nonumber' if options[:line_numbers] = false
   end
 
   def command_string

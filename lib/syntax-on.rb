@@ -42,6 +42,10 @@ class SyntaxOn
     theme_directories.inject([]){ |all,this| all + Dir[File.join(File.expand_path(this), '*.css')] }
   end
 
+  def self.theme_names
+    themes.map { |theme| File.basename(theme).sub(/\.css$/,'') }.uniq.sort
+  end
+
   def self.theme name = :remi
     File.read themes.find { |theme| File.basename(theme).downcase == "#{ name }.css".downcase }
   end

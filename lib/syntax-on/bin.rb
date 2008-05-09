@@ -33,6 +33,7 @@ Usage: #{ script_name } themes [OPTIONS] [THEME]
     -l, --list            List all available themes
     -p, --path            Print out the THEME_PATH directories
     -c, --cat             Cat (show) a theme
+    -n, --names           Print out the names of available themes
 
   Arguments:
     THEME                 A theme name, eg. 'default'
@@ -48,6 +49,7 @@ doco
       opts.on('-l','--list'){ options[:list] = true }
       opts.on('-p','--path'){ options[:path] = true }
       opts.on('-c','--cat'){ options[:cat] = true }
+      opts.on('-n','--names'){ options[:names] = true }
     end
     opts.parse! args
 
@@ -55,6 +57,7 @@ doco
 
     puts SyntaxOn::themes.sort.join("\n") if options[:list]
     puts SyntaxOn::theme_directories.join("\n") if options[:path]
+    puts SyntaxOn::theme_names.join("\n") if options[:names]
     puts SyntaxOn::theme(theme) if options[:cat] and theme
   end
 

@@ -14,8 +14,6 @@ class SyntaxOn::Browser
     @request  = Rack::Request.new env
 
     @current_theme = request['theme'] if request['theme'] and SyntaxOn.theme_names.include? request['theme']
-    puts "CURRENT THEME = #{ current_theme }"
-    puts "REQUST PARAMS = #{ request.params.inspect }"
 
     if request.path_info[/^\/styles\/(.*)\.css$/]
       response['Content-Type'] = 'text/css'
@@ -45,7 +43,7 @@ class SyntaxOn::Browser
 
   def theme_selector
     <<HTML
-    <select id="theme-selector" onchange="javascript:window.location = window.location.toString().replace(/\?.*/,'') + '?theme=' + document.getElementById('theme-selector').value">
+    <select id="theme-selector" onchange="javascript:window.location = window.location.toString().replace(/\\?.*/,'') + '?theme=' + document.getElementById('theme-selector').value">
       <option>... select a theme ...</option>
       #{ SyntaxOn::theme_names.map { |theme| "<option>#{theme}</option>" } }
     </select>
@@ -65,7 +63,7 @@ HTML
     <link rel="stylesheet" href="/styles/#{ current_theme }.css" type="text/css" />
   <head>
   <body>
-<h1>#{ File.join(@directory, '**/*') }</h1>
+<h1>#{ @request.path_info }</h1>
 #{ theme_selector }
 <hr />
 <pre>

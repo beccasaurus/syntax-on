@@ -1,0 +1,15 @@
+== syntax-on
+
+Syntax-on is a library for highlighting source by automating vim
+
+It also has a command line interface and a paste-bin style website http://syntax-on.org
+
+== Usage
+
+  require 'syntax-on'
+
+  # example specifying syntax
+  puts SyntaxOn.new("class Dog; end", :syntax => :ruby).to_html
+
+  # example using a modeline
+  puts SyntaxOn.new("class Dog; end\n# vim:set ft=ruby:").to_html

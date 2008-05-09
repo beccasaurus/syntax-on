@@ -11,11 +11,12 @@ end
 
 class SyntaxOn
 
-  VIM_BIN         = 'vim'
-  VIM_OPTIONS     = [ "syntax on" ]
-  VIM_RENDER      = [ "exe 'normal zR'", "runtime\\! syntax/2html.vim", "wq", "q" ]
-  TEMP_DIRECTORY  = '/tmp/syntax-on'
-  TEMP_FILENAME   = lambda { Time.now.strftime '%Y-%d-%m_%Hh-%Mm-%Ss' }
+  VIM_BIN           = 'vim'
+  VIM_OPTIONS       = [ "syntax on" ]
+  VIM_RENDER        = [ "exe 'normal zR'", "runtime\\! syntax/2html.vim", "wq", "q" ]
+  TEMP_DIRECTORY    = '/tmp/syntax-on'
+  TEMP_FILENAME     = lambda { Time.now.strftime '%Y-%d-%m_%Hh-%Mm-%Ss' }
+  THEME_PATH        = [ '~/.syntaxon/themes' ]
 
   attr_accessor :code, :syntax
 
@@ -37,8 +38,27 @@ class SyntaxOn
     finish
   end
 
+  def self.themes
+    theme_directories.inject([]){ |all,this| all + Dir[File.join(File.expand_path(this), '*.css')] }
+  end
+
   def self.theme name = :remi
-    File.read( File.expand_path( File.dirname(__FILE__) + "/../themes/#{ name }.css" ) )
+    File.read themes.find { |theme| File.basename(theme).downcase == "#{ name }.css".downcase }
+  end
+
+  def self.theme_directory
+    File.expand_path( File.join( File.dirname(__FILE__), "/../themes/" ))
+  end
+
+  def self.theme_directories
+    SyntaxOn::THEME_PATH << self.theme_directory
+  end
+
+  # add to class, as well, so it can be accessed by THEME_PATH constant
+  class << self
+    def self.theme_directory
+      File.expand_path( File.join( File.dirname(__FILE__), "/../themes/" ))
+    end
   end
 
   private

@@ -35,9 +35,8 @@ class SyntaxOn::Browser
     <<HTML
 <html>
   <head>
-    <style type="text/css">
-    <!--#{ css }-->
-    </style>
+    <script src="http://jquery.com/src/jquery-latest.js" type="text/javascript"></script>
+    <style>#{ css }</style>
   <head>
   <body>
 <h1>#{ File.join(@directory, '**/*') }</h1>
@@ -53,12 +52,7 @@ HTML
   end
 
   def css # need to fix this ... can't seem to find the theme directory when running in thin ...
-    %(
-    pre { margin-left: 1pt; padding: 5pt; } pre { color: #e1e1e1; background-color: #030507; }
-    .Constant { color: #ca0101; } .Identifier { color: #06989a; } 
-    .PreProc { color: #75507b; } .Underlined { color: #75507b; } .Title { color: #75507b; } 
-    .Special { color: #75507b; } .Statement { color: #bd9901; } .Type { color: #4e9a06; } 
-    .Comment { color: #3465a4; } .lnr { color: #bd9901; } pre a[href] { color: #D52222; } )
+    SyntaxOn::theme :murphy
   end
 
 end

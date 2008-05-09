@@ -25,6 +25,39 @@ class SyntaxOn::Bin
 doco
   end 
 
+  def themes_help
+    <<doco
+Usage: #{ script_name } themes [OPTIONS] [THEME]
+
+  Options:
+    -l, --list            List all available themes
+    -p, --path            Print out the THEME_PATH directories
+    -c, --cat             Cat (show) a theme
+
+  Arguments:
+    THEME                 A theme name, eg. 'default'
+
+  Summary:
+    Command for managing #{ script_name } themes
+  end
+doco
+  end
+  def themes *args
+    options = {}
+    opts = OptionParser.new do |opts|
+      opts.on('-l','--list'){ options[:list] = true }
+      opts.on('-p','--path'){ options[:path] = true }
+      opts.on('-c','--cat'){ options[:cat] = true }
+    end
+    opts.parse! args
+
+    theme = args.last
+
+    puts SyntaxOn::themes.sort.join("\n") if options[:list]
+    puts SyntaxOn::theme_directories.join("\n") if options[:path]
+    puts SyntaxOn::theme(theme) if options[:cat] and theme
+  end
+
   def browser_help
     <<doco
 Usage: #{ script_name } server [DIRECTORY]

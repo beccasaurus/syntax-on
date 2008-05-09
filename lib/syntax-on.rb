@@ -17,7 +17,7 @@ class SyntaxOn
   TEMP_DIRECTORY    = '/tmp/syntax-on'
   TEMP_FILENAME     = lambda { Time.now.strftime '%Y-%d-%m_%Hh-%Mm-%Ss' }
   THEME_PATH        = [ '~/.syntaxon/themes' ]
-  PREVIEW_COMMAND   = lambda { |file| "firefox #{file} &" }
+  PREVIEW_COMMAND   = lambda { |file| (Gem::Platform.local.os == 'darwin') ? "open -a Firefox '#{file}'" : "firefox '#{file}' &" }
 
   attr_accessor :code, :syntax
 

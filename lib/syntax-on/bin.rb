@@ -66,7 +66,8 @@ doco
 Usage: #{ script_name } server [DIRECTORY]
 
   Options:
-    -p, --port            Port to run on
+    -P, --port            Port to run on
+    -p, --preview         Preview browser in Firefox
 
   Arguments:
     DIRECTORY             Root directory to browse
@@ -85,13 +86,16 @@ doco
       puts "Please install the 'thin' gem to run `#{script_name} server`" ; exit
     end
 
-    options = { :port => 6789 }
+    options = { :port => 6789  }
     opts = OptionParser.new do |opts|
-      opts.on('-p','--port [PORT]'){ |port| options[:port] = port }
+      opts.on('-P','--port [PORT]'){ |port| options[:port] = port }
+      opts.on('-p','--preview'){ options[:preview] = true }
     end
     opts.parse! args
     dir = args.last
     
+    Thread.new { sleep 1 ; system(SyntaxOn::PREVIEW_COMMAND.call("http://localhost:#{ options[:port] }")) } if options[:preview]
+
     require 'syntax-on/browser'
     Thin::Server.start('0.0.0.0', options[:port].to_i) do
       use Rack::CommonLogger

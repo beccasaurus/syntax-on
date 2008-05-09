@@ -13,6 +13,7 @@ class SyntaxOn::Browser
     @response = Rack::Response.new
     @request  = Rack::Request.new env
 
+    @current_theme ||= 'remi' # set default theme to 'remi'
     @current_theme = request['theme'] if request['theme'] and SyntaxOn.theme_names.include? request['theme']
 
     if request.path_info[/^\/styles\/(.*)\.css$/]

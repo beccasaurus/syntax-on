@@ -106,12 +106,14 @@ Usage: #{ script_name } highlight [OPTIONS] FILE
 
   Options:
     -p, --preview         Preview file in Firefox
-    -t, --theme THEME     Theme to use (default :remi)
+    -t, --theme THEME     Theme to use (default 'remi')
     -s, --syntax SYNTAX   Specify syntax to use
     -o, --output FILE     Specify name of file to create,
                             output is echoed if -o STDOUT
     -c, --code CODE       Specify code to use in place of 
                             a file (also checks STDIN)
+    -b,--bash             EXPERIMENTAL: use a new bash session 
+                            for vim (requires 'session' gem)
 
   Arguments:
     FILE                  Name of the file to highlight
@@ -128,6 +130,7 @@ doco
       opts.on('-s','--syntax [SYNTAX]'){ |syntax| options[:syntax] = syntax }
       opts.on('-o','--output [FILE]'){ |file| options[:output] = file }
       opts.on('-c','--code [CODE]'){ |code| options[:code] = (code.nil? ? STDIN.readlines.join('') : code) }
+      opts.on('-b','--bash'){ options[:bash] = true }
     end
     opts.parse! args
     file = args.last
@@ -135,7 +138,7 @@ doco
 
     if options[:code] or ( file and File.file? file )
       css  = SyntaxOn::theme options[:theme]
-      html = SyntaxOn.new( options[:code], :syntax => options[:syntax], :file => file ).to_html
+      html = SyntaxOn.new( options[:code], :syntax => options[:syntax], :file => file, :use_session => options[:bash] ).to_html
       html = <<HTML
 <html>
 <head>
@@ -154,7 +157,7 @@ HTML
         File.open(out, 'w') do |f|
           f << html
         end
-        system("firefox #{out} &") if options[:preview]
+        system(SyntaxOn::PREVIEW_COMMAND.call(out)) if options[:preview]
       else
         puts html
       end

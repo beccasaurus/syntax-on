@@ -17,6 +17,7 @@ class SyntaxOn
   TEMP_DIRECTORY    = '/tmp/syntax-on'
   TEMP_FILENAME     = lambda { Time.now.strftime '%Y-%d-%m_%Hh-%Mm-%Ss' }
   THEME_PATH        = [ '~/.syntaxon/themes' ]
+  PREVIEW_COMMAND   = lambda { |file| "firefox #{file} &" }
 
   attr_accessor :code, :syntax
 
@@ -27,6 +28,7 @@ class SyntaxOn
       @code = File.read @file
     end
     @syntax = options[:syntax]
+    @use_session = options[:use_session]
   end
 
   def to_html options = { :line_numbers => true }
@@ -91,11 +93,22 @@ class SyntaxOn
   end
 
   def command_string
-    "#{ VIM_BIN } #{ @options.to_vim_args } #{ VIM_RENDER.to_vim_args } #{ @filename } &>/dev/null"
+    "#{ VIM_BIN } #{ @options.to_vim_args } #{ VIM_RENDER.to_vim_args } #{ @filename }" # &>/dev/null"
   end
 
   def render
-    @output = `#{ command_string }`
+    if @use_session
+      require 'session'
+      puts "using Session"
+      bash = Session::Bash.new
+      bash.execute "cd '#{ TEMP_DIRECTORY }'"
+      puts "cd'd to directory ..."
+      bash.execute command_string, :stdout => STDOUT, :stderr => STDERR
+      # @output, @error = bash.execute command_string
+      puts "ran command string ... should return now ..."
+    else
+      @output = `#{ command_string }`
+    end
     @html_file = "#{ @filename }.html"
   end
 

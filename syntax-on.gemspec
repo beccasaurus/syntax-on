@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "syntax-on"
-  s.version = "0.1.3"
+  s.version = "0.1.5"
   s.date = "2008-05-09"
   s.summary = "vim-based syntax highlighting"
   s.email = "remi@remitaylor.com"

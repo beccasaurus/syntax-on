@@ -11,7 +11,7 @@ end
 class SyntaxOn
 
   VIM_BIN         = 'vim'
-  VIM_OPTIONS     = [ "syntax on", "set nonumber", "exe 'normal zR'" ]
+  VIM_OPTIONS     = [ "syntax on", "exe 'normal zR'" ]
   VIM_RENDER      = [ "runtime\\! syntax/2html.vim", "wq", "q" ]
   TEMP_DIRECTORY  = '/tmp/syntax-on'
   TEMP_FILENAME   = lambda { Time.now.strftime '%Y-%d-%m_%Hh-%Mm-%Ss' }

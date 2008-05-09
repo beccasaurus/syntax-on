@@ -34,15 +34,22 @@ class SyntaxOn
     setup_vim_options options
     render
     @html = File.read(@html_file).match(/<pre>(.*)<\/pre>/m)[1].strip
+    finish
   end
 
   def self.theme name = :remi
-    File.read( File.dirname(__FILE__) + "/../themes/#{ name }.css" )
+    File.read( File.expand_path( File.dirname(__FILE__) + "/../themes/#{ name }.css" ) )
   end
 
   private
 
+  def finish
+    FileUtils.cd @pwd
+    @html
+  end
+
   def setup_temp_dir
+    @pwd = FileUtils.pwd
     FileUtils.mkdir_p TEMP_DIRECTORY
     FileUtils.cd      TEMP_DIRECTORY
   end
@@ -56,7 +63,7 @@ class SyntaxOn
   def setup_vim_options options = {}
     @options = VIM_OPTIONS.clone
     @options << "setfiletype #{ @syntax.to_s }" if @syntax
-    @options << 'set nonumber' if options[:line_numbers] = false
+    (options[:line_numbers]) ? @options << 'set number' : @options << 'set nonumber'
   end
 
   def command_string

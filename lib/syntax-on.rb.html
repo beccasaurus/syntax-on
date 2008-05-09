@@ -1,0 +1,100 @@
+<html>
+<head>
+  <style type="text/css">
+  <!--.Identifier { color: #98fb98; }
+.Statement { color: #f0e68c; font-weight: bold; }
+.PreProc { color: #cd5c5c; }
+.Special { color: #ffdead; }
+.Constant { color: #ffa0a0; }
+.Comment { color: #87ceeb; }
+.Type { color: #bdb76b; font-weight: bold; }
+pre { font-family: monospace; color: #ffffff; background-color: #333333; }
+body { font-family: monospace; color: #ffffff; background-color: #333333; }
+.lnr { color: #ffff00; }
+.Folded { color: #ffd700; background-color: #4d4d4d; }
+-->
+  </style>
+</head>
+<body>
+<pre>
+<span class="lnr"> 1 </span><span class="Identifier">$:</span>.unshift <span class="Type">File</span>.dirname(<span class="Constant">__FILE__</span>)
+<span class="lnr"> 2 </span>
+<span class="lnr"> 3 </span><span class="PreProc">require</span> <span class="Special">'</span><span class="Constant">rubygems</span><span class="Special">'</span>
+<span class="lnr"> 4 </span><span class="PreProc">require</span> <span class="Special">'</span><span class="Constant">fileutils</span><span class="Special">'</span>
+<span class="lnr"> 5 </span>
+<span class="lnr"> 6 </span><span class="PreProc">class</span> <span class="Type">Array</span>
+<span class="lnr"> 7 </span>  <span class="PreProc">def</span> <span class="Identifier">to_vim_args</span>
+<span class="lnr"> 8 </span>    <span class="Constant">self</span>.map{ |<span class="Identifier">option</span>| <span class="Special">%{</span><span class="Constant">+&quot;</span><span class="Special">#{</span> option.gsub(<span class="Special">'</span><span class="Constant">&quot;</span><span class="Special">'</span>,<span class="Special">&quot;</span><span class="Constant">'</span><span class="Special">&quot;</span>) <span class="Special">}</span><span class="Constant">&quot;</span><span class="Special">}</span> }.join <span class="Special">'</span><span class="Constant"> </span><span class="Special">'</span>
+<span class="lnr"> 9 </span>  <span class="PreProc">end</span>
+<span class="lnr">10 </span><span class="PreProc">end</span>
+<span class="lnr">11 </span>
+<span class="lnr">12 </span><span class="PreProc">class</span> <span class="Type">SyntaxOn</span>
+<span class="lnr">13 </span>
+<span class="lnr">14 </span>  <span class="Type">VIM_BIN</span>         = <span class="Special">'</span><span class="Constant">vim</span><span class="Special">'</span>
+<span class="lnr">15 </span>  <span class="Type">VIM_OPTIONS</span>     = [ <span class="Special">&quot;</span><span class="Constant">syntax on</span><span class="Special">&quot;</span> ]
+<span class="lnr">16 </span>  <span class="Type">VIM_RENDER</span>      = [ <span class="Special">&quot;</span><span class="Constant">exe 'normal zR'</span><span class="Special">&quot;</span>, <span class="Special">&quot;</span><span class="Constant">runtime</span><span class="Special">\\</span><span class="Constant">! syntax/2html.vim</span><span class="Special">&quot;</span>, <span class="Special">&quot;</span><span class="Constant">wq</span><span class="Special">&quot;</span>, <span class="Special">&quot;</span><span class="Constant">q</span><span class="Special">&quot;</span> ]
+<span class="lnr">17 </span>  <span class="Type">TEMP_DIRECTORY</span>  = <span class="Special">'</span><span class="Constant">/tmp/syntax-on</span><span class="Special">'</span>
+<span class="lnr">18 </span>  <span class="Type">TEMP_FILENAME</span>   = <span class="Statement">lambda</span> { <span class="Type">Time</span>.now.strftime <span class="Special">'</span><span class="Constant">%Y-%d-%m_%Hh-%Mm-%Ss</span><span class="Special">'</span> }
+<span class="lnr">19 </span>
+<span class="lnr">20 </span>  <span class="Statement">attr_accessor</span> <span class="Constant">:code</span>, <span class="Constant">:syntax</span>
+<span class="lnr">21 </span>
+<span class="lnr">22 </span>  <span class="PreProc">def</span> <span class="Identifier">initialize</span> code, options = { <span class="Constant">:syntax</span> =&gt; <span class="Constant">nil</span> }
+<span class="lnr">23 </span>    <span class="Identifier">@code</span>   = code
+<span class="lnr">24 </span>    <span class="Statement">if</span> options[<span class="Constant">:file</span>] <span class="Statement">and</span> <span class="Type">File</span>.file? options[<span class="Constant">:file</span>]
+<span class="lnr">25 </span>      <span class="Identifier">@file</span> = options[<span class="Constant">:file</span>]
+<span class="lnr">26 </span>      <span class="Identifier">@code</span> = <span class="Type">File</span>.read <span class="Identifier">@file</span>
+<span class="lnr">27 </span>    <span class="Statement">end</span>
+<span class="lnr">28 </span>    <span class="Identifier">@syntax</span> = options[<span class="Constant">:syntax</span>]
+<span class="lnr">29 </span>  <span class="PreProc">end</span>
+<span class="lnr">30 </span>
+<span class="lnr">31 </span>  <span class="PreProc">def</span> <span class="Identifier">to_html</span> options = { <span class="Constant">:line_numbers</span> =&gt; <span class="Constant">true</span> }
+<span class="lnr">32 </span>    setup_temp_dir
+<span class="lnr">33 </span>    create_temp_file
+<span class="lnr">34 </span>    setup_vim_options options
+<span class="lnr">35 </span>    render
+<span class="lnr">36 </span>    <span class="Identifier">@html</span> = <span class="Type">File</span>.read(<span class="Identifier">@html_file</span>).match(<span class="Special">/</span><span class="Constant">&lt;pre&gt;(.*)&lt;\/pre&gt;</span><span class="Special">/m</span>)[<span class="Constant">1</span>].strip
+<span class="lnr">37 </span>  <span class="PreProc">end</span>
+<span class="lnr">38 </span>
+<span class="lnr">39 </span>  <span class="PreProc">def</span> <span class="Constant">self</span>.<span class="Identifier">theme</span> name = <span class="Constant">:remi</span>
+<span class="lnr">40 </span>    <span class="Type">File</span>.read( <span class="Type">File</span>.dirname(<span class="Constant">__FILE__</span>) + <span class="Special">&quot;</span><span class="Constant">/../themes/</span><span class="Special">#{</span> name <span class="Special">}</span><span class="Constant">.css</span><span class="Special">&quot;</span> )
+<span class="lnr">41 </span>  <span class="PreProc">end</span>
+<span class="lnr">42 </span>
+<span class="lnr">43 </span>  <span class="Statement">private</span>
+<span class="lnr">44 </span>
+<span class="lnr">45 </span>  <span class="PreProc">def</span> <span class="Identifier">setup_temp_dir</span>
+<span class="lnr">46 </span>    <span class="Type">FileUtils</span>.mkdir_p <span class="Type">TEMP_DIRECTORY</span>
+<span class="lnr">47 </span>    <span class="Type">FileUtils</span>.cd      <span class="Type">TEMP_DIRECTORY</span>
+<span class="lnr">48 </span>  <span class="PreProc">end</span>
+<span class="lnr">49 </span>
+<span class="lnr">50 </span>  <span class="PreProc">def</span> <span class="Identifier">create_temp_file</span>
+<span class="lnr">51 </span>    <span class="Identifier">@filename</span> = <span class="Type">File</span>.join <span class="Type">TEMP_DIRECTORY</span>, <span class="Type">TEMP_FILENAME</span>.call
+<span class="lnr">52 </span>    <span class="Identifier">@filename</span> &lt;&lt; <span class="Special">&quot;</span><span class="Constant">_</span><span class="Special">#{</span> <span class="Type">File</span>.basename <span class="Identifier">@file</span> <span class="Special">}</span><span class="Special">&quot;</span> <span class="Statement">if</span> <span class="Identifier">@file</span>
+<span class="lnr">53 </span>    <span class="Type">File</span>.open(<span class="Identifier">@filename</span>, <span class="Special">'</span><span class="Constant">w</span><span class="Special">'</span>){|<span class="Identifier">f</span>| f &lt;&lt; <span class="Identifier">@code</span> }
+<span class="lnr">54 </span>  <span class="PreProc">end</span>
+<span class="lnr">55 </span>
+<span class="lnr">56 </span>  <span class="PreProc">def</span> <span class="Identifier">setup_vim_options</span> options = {}
+<span class="lnr">57 </span>    <span class="Identifier">@options</span> = <span class="Type">VIM_OPTIONS</span>.clone
+<span class="lnr">58 </span>    <span class="Identifier">@options</span> &lt;&lt; <span class="Special">&quot;</span><span class="Constant">setfiletype </span><span class="Special">#{</span> <span class="Identifier">@syntax</span>.to_s <span class="Special">}</span><span class="Special">&quot;</span> <span class="Statement">if</span> <span class="Identifier">@syntax</span>
+<span class="lnr">59 </span>    <span class="Identifier">@options</span> &lt;&lt; <span class="Special">'</span><span class="Constant">set nonumber</span><span class="Special">'</span> <span class="Statement">if</span> options[<span class="Constant">:line_numbers</span>] = <span class="Constant">false</span>
+<span class="lnr">60 </span>  <span class="PreProc">end</span>
+<span class="lnr">61 </span>
+<span class="lnr">62 </span>  <span class="PreProc">def</span> <span class="Identifier">command_string</span>
+<span class="lnr">63 </span>    <span class="Special">&quot;</span><span class="Special">#{</span> <span class="Type">VIM_BIN</span> <span class="Special">}</span><span class="Constant"> </span><span class="Special">#{</span> <span class="Identifier">@options</span>.to_vim_args <span class="Special">}</span><span class="Constant"> </span><span class="Special">#{</span> <span class="Type">VIM_RENDER</span>.to_vim_args <span class="Special">}</span><span class="Constant"> </span><span class="Special">#{</span> <span class="Identifier">@filename</span> <span class="Special">}</span><span class="Constant"> &amp;&gt;/dev/null</span><span class="Special">&quot;</span>
+<span class="lnr">64 </span>  <span class="PreProc">end</span>
+<span class="lnr">65 </span>
+<span class="lnr">66 </span>  <span class="PreProc">def</span> <span class="Identifier">render</span>
+<span class="lnr">67 </span>    <span class="Identifier">@output</span> = <span class="Special">`</span><span class="Special">#{</span> command_string <span class="Special">}</span><span class="Special">`</span>
+<span class="lnr">68 </span>    <span class="Identifier">@html_file</span> = <span class="Special">&quot;</span><span class="Special">#{</span> <span class="Identifier">@filename</span> <span class="Special">}</span><span class="Constant">.html</span><span class="Special">&quot;</span>
+<span class="lnr">69 </span>  <span class="PreProc">end</span>
+<span class="lnr">70 </span>
+<span class="lnr">71 </span><span class="PreProc">end</span>
+<span class="lnr">72 </span>
+<span class="lnr">73 </span>rc = <span class="Type">File</span>.expand_path <span class="Special">'</span><span class="Constant">~/.syntaxonrc</span><span class="Special">'</span>
+<span class="lnr">74 </span><span class="Statement">eval</span> <span class="Type">File</span>.read(rc) <span class="Statement">if</span> <span class="Type">File</span>.file? rc
+<span class="lnr">75 </span>
+<span class="lnr">76 </span><span class="Statement">unless</span> <span class="Special">`</span><span class="Constant">which </span><span class="Special">#{</span> <span class="Type">SyntaxOn</span>::<span class="Type">VIM_BIN</span> <span class="Special">}</span><span class="Special">`</span>.strip =~ <span class="Special">/</span><span class="Constant">^\/(.*)</span><span class="Special">#{</span> <span class="Type">SyntaxOn</span>::<span class="Type">VIM_BIN</span> <span class="Special">}</span><span class="Constant">$</span><span class="Special">/</span>
+<span class="lnr">77 </span>  puts <span class="Special">&quot;</span><span class="Constant">SyntaxOn WARNING: VIM_BIN[</span><span class="Special">#{</span> <span class="Type">SyntaxOn</span>::<span class="Type">VIM_BIN</span>.inspect <span class="Special">}</span><span class="Constant">] not found in PATH</span><span class="Special">&quot;</span>
+<span class="lnr">78 </span><span class="Statement">end</span>
+</pre>
+</body>
+</html>

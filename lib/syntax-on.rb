@@ -21,6 +21,10 @@ class SyntaxOn
 
   def initialize code, options = { :syntax => nil }
     @code   = code
+    if options[:file] and File.file? options[:file]
+      @file = options[:file] 
+      @code = File.read @file
+    end
     @syntax = options[:syntax]
   end
 
@@ -45,6 +49,7 @@ class SyntaxOn
 
   def create_temp_file
     @filename = File.join TEMP_DIRECTORY, TEMP_FILENAME.call
+    @filename << "_#{ File.basename @file }" if @file
     File.open(@filename, 'w'){|f| f << @code }
   end
 
@@ -60,7 +65,7 @@ class SyntaxOn
 
   def render
     @output = `#{ command_string }`
-    @html_file = @filename + '.html'
+    @html_file = "#{ @filename }.html"
   end
 
 end

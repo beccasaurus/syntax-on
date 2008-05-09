@@ -1,3 +1,2 @@
- * -b, --bash option for highlighting to tell it to run in a Bash::Session in the background
- * add theme choosing via dropdown to browser
- * add syntax-on theme(s) for listing themes and telling you howto create new ones, etc
+ * add caching features, specifically for the browser ... it should only re-render files if their content has changed
+ * make the browser's file/directory browser pretty, not the Dir[] hack that it is now

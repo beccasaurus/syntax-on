@@ -1,5 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 
+require 'rubygems'
 require 'fileutils'
 
 class Array
@@ -11,8 +12,8 @@ end
 class SyntaxOn
 
   VIM_BIN         = 'vim'
-  VIM_OPTIONS     = [ "syntax on", "exe 'normal zR'" ]
-  VIM_RENDER      = [ "runtime\\! syntax/2html.vim", "wq", "q" ]
+  VIM_OPTIONS     = [ "syntax on" ]
+  VIM_RENDER      = [ "exe 'normal zR'", "runtime\\! syntax/2html.vim", "wq", "q" ]
   TEMP_DIRECTORY  = '/tmp/syntax-on'
   TEMP_FILENAME   = lambda { Time.now.strftime '%Y-%d-%m_%Hh-%Mm-%Ss' }
 
@@ -29,6 +30,10 @@ class SyntaxOn
     setup_vim_options options
     render
     @html = File.read(@html_file).match(/<pre>(.*)<\/pre>/m)[1].strip
+  end
+
+  def self.theme name = :remi
+    File.read( File.dirname(__FILE__) + "/../themes/#{ name }.css" )
   end
 
   private

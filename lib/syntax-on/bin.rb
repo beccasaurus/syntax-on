@@ -52,7 +52,7 @@ doco
       opts.on('-t','--theme [THEME]'){ |theme| options[:theme] = theme }
       opts.on('-s','--syntax [SYNTAX]'){ |syntax| options[:syntax] = syntax }
       opts.on('-o','--output [FILE]'){ |file| options[:output] = file }
-      opts.on('-c','--code [CODE]'){ |code| options[:code] = (code.nil? ? STDIN.readlines.join("\n") : code) }
+      opts.on('-c','--code [CODE]'){ |code| options[:code] = (code.nil? ? STDIN.readlines.join('') : code) }
     end
     opts.parse! args
     file = args.last

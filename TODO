@@ -1,0 +1,3 @@
+ * -b, --bash option for highlighting to tell it to run in a Bash::Session in the background
+ * add theme choosing via dropdown to browser
+ * add syntax-on theme(s) for listing themes and telling you howto create new ones, etc

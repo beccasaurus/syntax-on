@@ -1,36 +1,37 @@
 class SyntaxOn::Browser
 
-  attr_accessor :directory
-
   def initialize directory = '.'
-    @directory = directory
+    @directory = directory || '.'
   end
 
   def call env
+    @pwd = Dir.pwd
+    Dir.chdir @directory
+    
     response = Rack::Response.new
     request  = Rack::Request.new env
-
     response.body = response_for env
+
+    Dir.chdir @pwd
 
     response.finish
   end
 
   def response_for env
-    path = env['PATH_INFO'].sub '/', ''
+    path = env['PATH_INFO'].sub '/',''
 
-    if File.file? File.join(@directory,path)
-      code_layout SyntaxOn.new( nil, :file => File.join(@directory,path) ).to_html
+    if File.file? path
+      code_layout SyntaxOn.new( nil, :file => path ).to_html
     else
-      file_list
+      code_layout
     end
   end
 
   def file_list
-    "<h1>#{ Dir.pwd }</h1>" +
     '<ul>' + Dir['**/*'].map { |file_or_dir| %{<li><a href="/#{file_or_dir}">#{file_or_dir}</a></li>} }.join + '</ul>'
   end
 
-  def code_layout code
+  def code_layout code = ''
     <<HTML
 <html>
   <head>
@@ -39,6 +40,8 @@ class SyntaxOn::Browser
     </style>
   <head>
   <body>
+<h1>#{ File.join(@directory, '**/*') }</h1>
+<hr />
 <pre>
 #{ code }
 </pre>

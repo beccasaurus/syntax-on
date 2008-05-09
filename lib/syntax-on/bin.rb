@@ -25,21 +25,24 @@ class SyntaxOn::Bin
 doco
   end 
 
-  def server_help
+  def browser_help
     <<doco
-Usage: #{ script_name } server
+Usage: #{ script_name } server [DIRECTORY]
 
   Options:
     -p, --port            Port to run on
 
+  Arguments:
+    DIRECTORY             Root directory to browse
+
   Requires gems: thin
 
   Summary:
-    Starts a web server to view syntax highlighted
+    Starts a web server to browse syntax highlighted
     files in the current directory
 doco
   end
-  def server *args
+  def browser *args
     begin
       require 'thin'
     rescue
@@ -51,12 +54,13 @@ doco
       opts.on('-p','--port [PORT]'){ |port| options[:port] = port }
     end
     opts.parse! args
+    dir = args.last
     
     require 'syntax-on/browser'
     Thin::Server.start('0.0.0.0', options[:port].to_i) do
       use Rack::CommonLogger
       use Rack::ShowExceptions
-      run SyntaxOn::Browser.new('.')
+      run SyntaxOn::Browser.new(dir)
     end
   end
 

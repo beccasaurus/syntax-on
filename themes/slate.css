@@ -1,0 +1,14 @@
+.Identifier { color: #fa8072; }
+.Function { color: #ffdead; }
+.Statement { color: #6495ed; font-weight: bold; }
+.Include { color: #ff0000; }
+.Special { color: #bdb76b; }
+.String { color: #87ceeb; }
+.Comment { color: #666666; }
+.Type { color: #6495ed; font-weight: bold; }
+.Constant { color: #ffa0a0; }
+.Define { color: #ffd700; font-weight: bold; }
+pre { font-family: monospace; color: #ffffff; background-color: #262626; }
+body { font-family: monospace; color: #ffffff; background-color: #262626; }
+.lnr { color: #7f7f7f; }
+.Folded { color: #666666; background-color: #000000; }

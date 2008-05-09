@@ -1,0 +1,18 @@
+#! /bin/bash
+for theme in /usr/share/vim/vim71/colors/*.vim
+do
+	echo $theme
+	theme="$(basename $theme)"
+	theme="${theme/.vim/}"
+	echo "generating theme: $theme"
+	gvim -f +"exe 'normal GzO'" +"colorscheme $theme" +"run! syntax/2html.vim" +"wq" +"q" example.rb
+	mv example.rb.html $theme.html
+done
+
+for html in *.html
+do
+	theme="${html/.html/}"
+	echo "$theme.html" | ruby -e 'puts File.read(STDIN.readlines.first.strip).match(/css">\n<!--\n(.*).-->/m)[1]' > $theme.css
+done
+
+rm *.html

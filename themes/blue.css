@@ -1,0 +1,11 @@
+.Identifier { color: #bebebe; }
+.Statement { color: #ffffff; }
+.PreProc { color: #00ff00; }
+.Special { color: #ff00ff; }
+.Constant { color: #00ffff; }
+.Comment { color: #bebebe; font-weight: bold; }
+.Type { color: #ffa500; font-weight: bold; }
+pre { font-family: monospace; color: #ffff00; background-color: #00008b; }
+body { font-family: monospace; color: #ffff00; background-color: #00008b; }
+.lnr { color: #00ffff; }
+.Folded { color: #000000; background-color: #ffa500; }

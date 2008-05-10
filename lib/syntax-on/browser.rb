@@ -48,6 +48,12 @@ class SyntaxOn::Browser
 HTML
   end
 
+  def line_number_remover
+    <<HTML
+    <a href="#" onclick="javascript:var num_line_numbers = document.getElementsByClassName('lnr').length; for(var i=0; i<num_line_numbers; i++){ document.getElementsByTagName('pre')[0].removeChild( document.getElementsByClassName('lnr')[0] ); }">remove line numbers (for copying)</a>
+HTML
+  end
+
   def theme_selector
     <<HTML
     <select id="theme-selector" onchange="javascript:window.location = window.location.toString().replace(/\\?.*/,'') + '?theme=' + document.getElementById('theme-selector').value">
@@ -73,6 +79,7 @@ HTML
 <h1>#{ @request.path_info }</h1>
 #{ theme_selector }
 #{ line_number_switcher_link }
+#{ line_number_remover }
 <hr />
 <pre>
 #{ code }

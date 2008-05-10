@@ -42,6 +42,12 @@ class SyntaxOn::Browser
     '<ul>' + Dir['**/*'].map { |file_or_dir| %{<li><a href="/#{file_or_dir}">#{file_or_dir}</a></li>} }.join + '</ul>'
   end
 
+  def line_number_switcher_link
+    <<HTML
+    <a href="#" onclick="javascript:for each(var span in document.getElementsByClassName('lnr')){ (span.style.display == 'none') ? span.style.display = 'inline' : span.style.display = 'none'; }">toggle line numbers</a>
+HTML
+  end
+
   def theme_selector
     <<HTML
     <select id="theme-selector" onchange="javascript:window.location = window.location.toString().replace(/\\?.*/,'') + '?theme=' + document.getElementById('theme-selector').value">
@@ -66,6 +72,7 @@ HTML
   <body>
 <h1>#{ @request.path_info }</h1>
 #{ theme_selector }
+#{ line_number_switcher_link }
 <hr />
 <pre>
 #{ code }

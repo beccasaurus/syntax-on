@@ -2,7 +2,3 @@
  * make the browser's file/directory browser pretty, not the Dir[] hack that it is now ... try basing it on Redmine or Trac's source browser interface ... I'd suggest using Redmine's and giving credit, where due, to jplang ... so long as the browser uses the GPL or AGPL, it's all good (Redmine is GPL'd) ... just don't use it in the 'library,' which I intend on LGPLing
  * add Windows support, if gvim.exe is in the PATH - also, check the default path that GVim installs to in Windows.
  * Update documentation with howto add your own themes, etc
- * add these options to the default command:
-    let g:html_use_css = 1
-    let g:html_use_encoding = "utf8"
-    let g:use_xhtml = 1

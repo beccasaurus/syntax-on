@@ -1,3 +1,5 @@
+ * refactor browser!!!!!!! use ERB (cause it's included in ruby)
+ * fix the links for toggling line numbers ... they don't work cause i used a document function that isn't native javascript
  * add caching features, specifically for the browser ... it should only re-render files if their content has changed
  * make the browser's file/directory browser pretty, not the Dir[] hack that it is now ... try basing it on Redmine or Trac's source browser interface ... I'd suggest using Redmine's and giving credit, where due, to jplang ... so long as the browser uses the GPL or AGPL, it's all good (Redmine is GPL'd) ... just don't use it in the 'library,' which I intend on LGPLing
  * add Windows support, if gvim.exe is in the PATH - also, check the default path that GVim installs to in Windows.

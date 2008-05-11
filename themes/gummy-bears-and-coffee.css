@@ -1,0 +1,12 @@
+pre { color: #e1e1e1; background-color: rgb(20,20,20); }
+.Constant { color: rgb(214,31,29); /* red */ } 
+.Identifier { color: rgb(72,194,67); /* somewhat sage */ } 
+.PreProc { color: rgb(26,96,134);	 /* flat blue */ } 
+.Underlined { color: rgb(252,250,255); /* off white */ } 
+.Title { color: rgb(189,141,70); /* butterscotch */ } 
+.Special { color: rgb(236,99,47); /* light orange */} 
+.Statement { color: rgb(189,141,70); /* butterscotch */ } 
+.Type { color: rgb(72,194,67); /* somewhat sage */ } 
+.Comment { color: rgb(115,41,41); /* burgundy */ }
+.lnr { color: rgb(212,196,130); /* cream */ }
+a[href] { color: rgb(116,26,158); /* purple */ }

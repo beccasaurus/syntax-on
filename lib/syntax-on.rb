@@ -93,7 +93,7 @@ class SyntaxOn
   end
 
   def command_string
-    "#{ VIM_BIN } #{ @options.to_vim_args } #{ VIM_RENDER.to_vim_args } #{ @filename }" # &>/dev/null"
+    "#{ VIM_BIN } #{ @options.to_vim_args } #{ VIM_RENDER.to_vim_args } #{ @filename } 2>/dev/null"
   end
 
   def render

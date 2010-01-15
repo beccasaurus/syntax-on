@@ -21,17 +21,30 @@ class SyntaxOn
 
   attr_accessor :code, :syntax
 
-  def initialize code, options = { :syntax => nil }
-    @code   = code
+  def initialize code_or_options, options = nil
+    if code_or_options.is_a?(String)
+      options ||= {}
+      options[:code] = code_or_options
+    else
+      options = code_or_options
+    end
+
+    options[:syntax] ||= nil
+
     if options[:file] and File.file? options[:file]
       @file = options[:file] 
       @code = File.read @file
     end
+
+    @line_numbers = options[:line_numbers].nil? ? true : options[:line_numbers]
+
+    @code = options[:code] if @code.nil? and options[:code]
+
     @syntax = options[:syntax]
     @use_session = options[:use_session]
   end
 
-  def to_html options = { :line_numbers => true }
+  def to_html options = { :line_numbers => @line_numbers }
     setup_temp_dir
     create_temp_file
     setup_vim_options options
